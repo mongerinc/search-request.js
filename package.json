@@ -1,0 +1,22 @@
+{
+  "name": "search-request",
+  "version": "1.2.0",
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "grunt": "^1.0.0",
+    "grunt-browserify": "^5.0.0",
+    "grunt-concurrent": "^2.0.0",
+    "grunt-contrib-compress": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jasmine": "^1.0.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-karma": "^2.0.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "jasmine-core": "^2.0.0",
+    "karma": "^1.0.0",
+    "karma-jasmine": "^1.0.0",
+    "karma-phantomjs-launcher": "^1.0.4"
+  }
+}
