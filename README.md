@@ -6,6 +6,10 @@ This library provides a set of classes that help represent requests for complex 
 
 [![Build Status](https://travis-ci.org/mongerinc/search-request.js.png?branch=master)](https://travis-ci.org/mongerinc/search-request.js)
 
+Also see:
+
+[Search Request for PHP](https://github.com/mongerinc/search-request)
+
 Table of contents
 -----------------
 * [Installation](#installation)
