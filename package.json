@@ -18,5 +18,8 @@
     "karma": "^1.0.0",
     "karma-jasmine": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.4"
+  },
+  "scripts": {
+    "test": "grunt test"
   }
 }
