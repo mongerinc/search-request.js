@@ -1,11 +1,16 @@
 describe('pagination invalidation', function()
 {
-	var badValues = [null, ['not an integer'], 56.4, -5, 'not an integer'];
+	var request,
+		badValues = [null, ['not an integer'], 56.4, -5, 'not an integer'];
+
+	beforeEach(function()
+	{
+		request = new SearchRequest;
+	});
 
 	it("should not allow non-integer pages", function()
 	{
-		var request = new SearchRequest,
-			errorMessage = "A page can only be a positive integer.";
+		var errorMessage = "A page can only be a positive integer.";
 
 		badValues.forEach(function(badValue)
 		{
@@ -19,8 +24,7 @@ describe('pagination invalidation', function()
 
 	it("should not allow non-integer limits", function()
 	{
-		var request = new SearchRequest,
-			errorMessage = "A page row limit can only be a positive integer.";
+		var errorMessage = "A page row limit can only be a positive integer.";
 
 		badValues.forEach(function(badValue)
 		{

@@ -1,9 +1,14 @@
 describe('pagination', function()
 {
+	var request;
+
+	beforeEach(function()
+	{
+		request = new SearchRequest;
+	});
+
 	it("should have default values", function()
 	{
-		var request = new SearchRequest;
-
 		expect(request.page).toEqual(1);
 		expect(request.getPage()).toEqual(1);
 		expect(request.limit).toEqual(10);
@@ -12,8 +17,6 @@ describe('pagination', function()
 
 	it("should respect new values", function()
 	{
-		var request = new SearchRequest;
-
 		request.setPage(5).setLimit(50);
 
 		expect(request.page).toEqual(5);
@@ -25,8 +28,6 @@ describe('pagination', function()
 
 	it("should go to the next page", function()
 	{
-		var request = new SearchRequest;
-
 		request.nextPage();
 
 		expect(request.page).toEqual(2);
@@ -36,8 +37,6 @@ describe('pagination', function()
 
 	it("should respect integer-like strings", function()
 	{
-		var request = new SearchRequest;
-
 		request.setPage('2').setLimit('100');
 
 		expect(request.page).toEqual(2);

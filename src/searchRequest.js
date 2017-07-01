@@ -1,6 +1,6 @@
 var Sort = require('./sort'),
-    Filter = require('./filter'),
-    FilterSet = require('./filterSet');
+    FilterSet = require('./filterSet'),
+    isIntegeric = require('./validators/isIntegeric');
 
 function SearchRequest(json)
 {
@@ -10,30 +10,20 @@ function SearchRequest(json)
 
 		this.page = inputs.page;
 		this.limit = inputs.limit;
+		this.sorts = [];
+		this.addSorts(inputs.sorts);
+		this.addFilterSet(inputs.filterSet);
+	}
+	else
+	{
+		this.page = 1;
+		this.limit = 10;
+		this.sorts = [];
+		this.filterSet = new FilterSet;
 	}
 }
 
 SearchRequest.prototype = {
-
-	sorts: [],
-	page: 1,
-	limit: 10,
-	filterSet: new FilterSet,
-
-	/**
-	 * Adds the sorts from the provided input array
-	 *
-	 * @param  array    sorts
-	 */
-	addSortsFromArray: function(sorts)
-	{
-		var self = this;
-
-		sorts.forEach(function(sort)
-		{
-			self.addSort(sort.field, sort.direction);
-		});
-	},
 
 	/**
 	 * Overrides all sorts and sets the given field/direction as the primary sort
@@ -63,6 +53,24 @@ SearchRequest.prototype = {
 		this.sorts.push(new Sort(field, direction));
 
 		return this;
+	},
+
+	/**
+	 * Adds the sorts from the provided input array
+	 *
+	 * @param  array    sorts
+	 */
+	addSorts: function(sorts)
+	{
+		var self = this;
+
+		if (!Array.isArray(sorts))
+			throw new Error("It's only possible to add an array of sorts.");
+
+		sorts.forEach(function(sort)
+		{
+			self.addSort(sort.field, sort.direction);
+		});
 	},
 
 	/**
@@ -165,18 +173,59 @@ SearchRequest.prototype = {
 		return (this.page - 1) * this.limit;
 	},
 
+	/**
+	 * Gets the top-level filter set
+	 *
+	 * @return FilterSet
+	 */
+	getFilterSet: function()
+	{
+		return this.filterSet;
+	},
+
+	/**
+	 * Adds the filter set from the provided input array
+	 *
+	 * @param  object    filterSet
+	 */
+	addFilterSet: function(filterSet)
+	{
+		if (typeof filterSet !== 'object')
+			throw new Error("A filter set has to be an object.");
+
+		this.filterSet = new FilterSet(filterSet.boolean);
+
+		this.filterSet.addFilters(filterSet.filters);
+	},
+
+	/**
+	 * Convert the search request to a json string
+	 *
+	 * @return string
+	 */
+	toJson: function()
+	{
+		return JSON.stringify(this);
+	}
+
 };
 
-/**
- * Determines if the provided value is integer-like
- *
- * @param  mixed    value
- *
- * @return bool
- */
-function isIntegeric(value)
+var filterPassThroughMethods = [
+	'where', 'orWhere',
+	'whereBetween', 'orWhereBetween', 'whereNotBetween', 'orWhereNotBetween',
+	'whereExists', 'orWhereExists', 'whereNotExists', 'orWhereNotExists',
+	'whereIn', 'orWhereIn', 'whereNotIn', 'orWhereNotIn',
+	'getFilter', 'getFilterValue'
+];
+
+filterPassThroughMethods.forEach(function(method)
 {
-	return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
-}
+	SearchRequest.prototype[method] = function()
+	{
+		this.filterSet[method].apply(this.filterSet, arguments);
+
+		return this;
+	}
+});
 
 window.SearchRequest = SearchRequest;

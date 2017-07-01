@@ -3,17 +3,14 @@ function Sort(field, direction)
 	if (typeof field !== 'string')
 		throw new Error("The sort field should be a string.");
 
-	if (typeof direction !== 'string')
-		throw new Error("The sort direction should be a string.");
+	if (['asc', 'desc'].indexOf(direction) === -1)
+		throw new Error("The sort direction should either 'asc' or 'desc'.");
 
 	this.field = field;
 	this.direction = direction;
 }
 
 Sort.prototype = {
-
-	field: null,
-	direction: null,
 
 	/**
 	 * @return string
