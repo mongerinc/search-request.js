@@ -1,0 +1,4 @@
+{
+  "name": "search-request",
+  "description": "A library that helps represent complex search queries (filters, groups, etc.) and converts them to and from JSON"
+}
