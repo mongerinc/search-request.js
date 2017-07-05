@@ -21,4 +21,13 @@ describe('term', function()
 		expect(request.getTerm()).toEqual('something');
 	});
 
+	it("should allow nullifying a term", function()
+	{
+		request.setTerm('something');
+		request.setTerm(null);
+
+		expect(request.term).toEqual(null);
+		expect(request.getTerm()).toEqual(null);
+	});
+
 });

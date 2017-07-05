@@ -36,8 +36,8 @@ SearchRequest.prototype = {
 	 */
 	setTerm: function(term)
 	{
-		if (typeof term !== 'string')
-			throw new Error("A search term can only be a string.");
+		if (typeof term !== 'string' && term !== null)
+			throw new Error("A search term can only be a string or null.");
 
 		this.term = term;
 
