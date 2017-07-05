@@ -22,6 +22,7 @@ describe('json', function()
 		var request = new SearchRequest;
 
 		request.setPage(5).setLimit(50)
+		       .setTerm('search this')
 		       .addSort('something', 'asc').addSort('otherThing', 'desc')
 		       .where('fun', 'more').orWhere(function(filterSet)
 		       {
@@ -41,6 +42,7 @@ describe('json', function()
 		return JSON.stringify({
 			page: 5,
 			limit: 50,
+			term: 'search this',
 			sorts: [
 				{field: 'something', direction: 'asc'},
 				{field: 'otherThing', direction: 'desc'},

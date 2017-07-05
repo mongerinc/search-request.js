@@ -10,6 +10,7 @@ function SearchRequest(json)
 
 		this.page = inputs.page;
 		this.limit = inputs.limit;
+		this.term = inputs.term;
 		this.sorts = [];
 		this.addSorts(inputs.sorts);
 		this.addFilterSet(inputs.filterSet);
@@ -18,12 +19,27 @@ function SearchRequest(json)
 	{
 		this.page = 1;
 		this.limit = 10;
+		this.term = null;
 		this.sorts = [];
 		this.filterSet = new FilterSet;
 	}
 }
 
 SearchRequest.prototype = {
+
+	/**
+	 * Sets the global search term
+	 *
+	 * @param  string    term
+	 *
+	 * @return this
+	 */
+	setTerm: function(term)
+	{
+		this.term = term;
+
+		return this;
+	},
 
 	/**
 	 * Overrides all sorts and sets the given field/direction as the primary sort
