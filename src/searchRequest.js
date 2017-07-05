@@ -42,6 +42,16 @@ SearchRequest.prototype = {
 	},
 
 	/**
+	 * Gets the search term
+	 *
+	 * @return mixed
+	 */
+	getTerm: function()
+	{
+		return this.term;
+	},
+
+	/**
 	 * Overrides all sorts and sets the given field/direction as the primary sort
 	 *
 	 * @param  string    field

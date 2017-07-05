@@ -10,6 +10,7 @@ describe('term', function()
 	it("should have no default search term", function()
 	{
 		expect(request.term).toEqual(null);
+		expect(request.getTerm()).toEqual(null);
 	});
 
 	it("should allow adding a term", function()
@@ -17,6 +18,7 @@ describe('term', function()
 		request.setTerm('something');
 
 		expect(request.term).toEqual('something');
+		expect(request.getTerm()).toEqual('something');
 	});
 
 });
