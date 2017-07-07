@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.0.0
+- Add mechanism for changing all declared field names in the request to other values
+
 ### 2.1.0
 - Added bower.json
 - Added term property for global text searches

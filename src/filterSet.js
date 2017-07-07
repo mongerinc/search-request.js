@@ -375,6 +375,27 @@ FilterSet.prototype = {
 			return filter.getValue();
 	},
 
+	/**
+	 * Substitutes all field names in the filter set that match the provided substitution
+	 *
+	 * @param  string    original
+	 * @param  string    substitution
+	 */
+	substituteField: function(original, substitution)
+	{
+		this.filters.forEach(function(filter)
+		{
+			if (!filter.filters && (filter.field === original))
+			{
+				filter.field = substitution;
+			}
+			else if (filter.filters)
+			{
+				filter.substituteField(original, substitution);
+			}
+		})
+	}
+
 }
 
 module.exports = FilterSet;

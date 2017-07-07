@@ -228,6 +228,47 @@ SearchRequest.prototype = {
 	},
 
 	/**
+	 * Substitutes all field names in the request that match the provided set of substitutions
+	 *
+	 * @param  object    substitutions
+	 */
+	substituteFields: function(substitutions)
+	{
+		if (typeof substitutions !== 'object')
+			throw new Error("Multiple field substitutions require an object mapping original to substitution strings.");
+
+		for (var original in substitutions)
+		{
+			if (substitutions.hasOwnProperty(original))
+			{
+				this.substituteField(original, substitutions[original]);
+			}
+		}
+	},
+
+	/**
+	 * Substitutes all field names in the request that match the provided substitution
+	 *
+	 * @param  string    original
+	 * @param  string    substitution
+	 */
+	substituteField: function(original, substitution)
+	{
+		if ((typeof original !== 'string') || (typeof substitution !== 'string'))
+			throw new Error("Field subtitutions must consist of an original string and a substitution string.");
+
+		this.sorts.forEach(function(sort)
+		{
+			if (sort.field === original)
+			{
+				sort.field = substitution;
+			}
+		});
+
+		this.filterSet.substituteField(original, substitution);
+	},
+
+	/**
 	 * Convert the search request to a json string
 	 *
 	 * @return string
