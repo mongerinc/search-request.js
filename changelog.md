@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.1.0
+- Added faceting
+
 ### 3.0.1
 - Version bumping readme
 

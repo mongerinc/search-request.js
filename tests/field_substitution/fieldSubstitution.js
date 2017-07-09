@@ -31,6 +31,19 @@ describe('field substitution', function()
 		]);
 	});
 
+	it("should handle facet substitutions", function()
+	{
+		request.facetMany(['first', 'second']);
+
+		request.substituteFields({
+			'first': 'subFirst',
+		});
+
+		expect(request.getFacet('first')).toBe(undefined);
+		expect(request.getFacet('subFirst')).toBeTruthy();
+		expect(request.getFacet('second')).toBeTruthy();
+	});
+
 	it("should handle filter substitutions", function()
 	{
 		request.where('first', true)

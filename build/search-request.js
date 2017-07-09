@@ -1,4 +1,246 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var isIntegeric = require('./validators/isIntegeric');
+
+function Facet(values)
+{
+	if (!values || typeof values !== 'object')
+		throw new Error("A Facet object must be instantiated with an object of input values.");
+
+	this.setField(values.field);
+	this.setSortType(values.hasOwnProperty('sortType') ? values.sortType : 'value');
+	this.setSortDirection(values.hasOwnProperty('sortDirection') ? values.sortDirection : 'asc');
+	this.setPage(values.hasOwnProperty('page') ? values.page : 1);
+	this.setLimit(values.hasOwnProperty('limit') ? values.limit : 10);
+	this.setMinimumCount(values.hasOwnProperty('minimumCount') ? values.minimumCount : 1);
+	this.setExcludesOwnFilters(values.hasOwnProperty('excludesOwnFilters') ? values.excludesOwnFilters : true);
+}
+
+Facet.prototype = {
+
+	/**
+	 * @return string
+	 */
+	getField: function()
+	{
+		return this.field;
+	},
+
+	/**
+	 * @return bool
+	 */
+	isCountSorting: function()
+	{
+		return this.sortType === 'count';
+	},
+
+	/**
+	 * @return bool
+	 */
+	isValueSorting: function()
+	{
+		return this.sortType === 'value';
+	},
+
+	/**
+	 * @return string
+	 */
+	getSortDirection: function()
+	{
+		return this.sortDirection;
+	},
+
+	/**
+	 * @return int
+	 */
+	getPage: function()
+	{
+		return this.page;
+	},
+
+	/**
+	 * @return int
+	 */
+	getLimit: function()
+	{
+		return this.limit;
+	},
+
+	/**
+	 * @return int
+	 */
+	getSkip: function()
+	{
+		return (this.page - 1) * this.limit;
+	},
+
+	/**
+	 * @return int
+	 */
+	getMinimumCount: function()
+	{
+		return this.minimumCount;
+	},
+
+	/**
+	 * @return bool
+	 */
+	shouldExcludeOwnFilters: function()
+	{
+		return this.excludesOwnFilters;
+	},
+
+	/**
+	 * Sets the field
+	 *
+	 * @param  string    field
+	 *
+	 * @return this
+	 */
+	setField: function(field)
+	{
+		if (typeof field !== 'string')
+		{
+			throw new Error("The facet field must be a string.");
+		}
+
+		this.field = field;
+
+		return this;
+	},
+
+	/**
+	 * @return this
+	 */
+	sortByCount: function()
+	{
+		return this.setSortType('count');
+	},
+
+	/**
+	 * @return this
+	 */
+	sortByValue: function()
+	{
+		return this.setSortType('value');
+	},
+
+	/**
+	 * @param  string    type
+	 *
+	 * @return this
+	 */
+	setSortType: function(type)
+	{
+		if (['count', 'value'].indexOf(type) === -1)
+			throw new Error("The facet sort type should be either 'count' or 'value'.");
+
+		this.sortType = type;
+
+		return this;
+	},
+
+	/**
+	 * @param  string    direction
+	 *
+	 * @return this
+	 */
+	setSortDirection: function(direction)
+	{
+		if (['asc', 'desc'].indexOf(direction) === -1)
+			throw new Error("The sort direction must be either 'asc' or 'desc'.");
+
+		this.sortDirection = direction;
+
+		return this;
+	},
+
+	/**
+	 * @param  int    page
+	 *
+	 * @return this
+	 */
+	setPage: function(page)
+	{
+		if (!isIntegeric(page) || page <= 0)
+			throw new Error("A page can only be a positive integer.");
+
+		this.page = parseInt(page);
+
+		return this;
+	},
+
+	/**
+	 * @return this
+	 */
+	nextPage: function()
+	{
+		this.page++;
+
+		return this;
+	},
+
+	/**
+	 * @param  int    limit
+	 *
+	 * @return this
+	 */
+	setLimit: function(limit)
+	{
+		if (!isIntegeric(limit) || limit <= 0)
+			throw new Error("A page row limit can only be a positive integer.");
+
+		this.limit = parseInt(limit);
+
+		return this;
+	},
+
+	/**
+	 * @param  int    minimumCount
+	 *
+	 * @return this
+	 */
+	setMinimumCount: function(minimumCount)
+	{
+		if (!isIntegeric(minimumCount) || (minimumCount < 0))
+			throw new Error("The minimum count must be an integer.");
+
+		this.minimumCount = parseInt(minimumCount);
+
+		return this;
+	},
+
+	/**
+	 * @return this
+	 */
+	excludeOwnFilters: function()
+	{
+		return this.setExcludesOwnFilters(true);
+	},
+
+	/**
+	 * @return this
+	 */
+	includeOwnFilters: function()
+	{
+		return this.setExcludesOwnFilters(false);
+	},
+
+	/**
+	 * @param  bool    value
+	 *
+	 * @return this
+	 */
+	setExcludesOwnFilters: function(value)
+	{
+		this.excludesOwnFilters = !!value;
+
+		return this;
+	},
+
+}
+
+module.exports = Facet;
+},{"./validators/isIntegeric":7}],2:[function(require,module,exports){
 function Filter(field, operator, value, boolean)
 {
 	if ((['in', 'not in', 'between', 'not between'].indexOf(operator) !== -1) && !Array.isArray(value))
@@ -63,7 +305,7 @@ Filter.prototype = {
 }
 
 module.exports = Filter;
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var Filter = require('./filter'),
 	isBooleanString = require('./validators/isBooleanString'),
 	isOperator = require('./validators/isOperator');
@@ -465,8 +707,9 @@ FilterSet.prototype = {
 }
 
 module.exports = FilterSet;
-},{"./filter":1,"./validators/isBooleanString":5,"./validators/isOperator":7}],3:[function(require,module,exports){
+},{"./filter":2,"./validators/isBooleanString":6,"./validators/isOperator":8}],4:[function(require,module,exports){
 var Sort = require('./sort'),
+    Facet = require('./facet'),
     FilterSet = require('./filterSet'),
     isIntegeric = require('./validators/isIntegeric');
 
@@ -481,6 +724,8 @@ function SearchRequest(json)
 		this.term = inputs.term;
 		this.sorts = [];
 		this.addSorts(inputs.sorts);
+		this.facets = [];
+		this.addFacets(inputs.facets);
 		this.addFilterSet(inputs.filterSet);
 	}
 	else
@@ -489,6 +734,7 @@ function SearchRequest(json)
 		this.limit = 10;
 		this.term = null;
 		this.sorts = [];
+		this.facets = [];
 		this.filterSet = new FilterSet;
 	}
 }
@@ -588,6 +834,92 @@ SearchRequest.prototype = {
 	getSorts: function()
 	{
 		return this.sorts;
+	},
+
+	/**
+	 * Add a facet
+	 *
+	 * @param  string    field
+	 *
+	 * @return Facet
+	 */
+	facet: function(field)
+	{
+		var facet = new Facet({field: field});
+
+		this.facets.push(facet);
+
+		return facet;
+	},
+
+	/**
+	 * Add a facet
+	 *
+	 * @param  string    field
+	 *
+	 * @return this
+	 */
+	facetMany: function(fields)
+	{
+		var self = this;
+
+		if (!Array.isArray(fields))
+			throw new Error("Adding many facets must be done with an array.");
+
+		fields.forEach(function(field)
+		{
+			self.facet(field);
+		});
+
+		return this;
+	},
+
+	/**
+	 * Adds a group of facets
+	 *
+	 * @param  array    facets
+	 *
+	 * @return this
+	 */
+	addFacets: function(facets)
+	{
+		var self = this;
+
+		if (!Array.isArray(facets))
+			throw new Error("Adding many facets must be done with an array.");
+
+		facets.forEach(function(facet)
+		{
+			self.facets.push(new Facet(facet));
+		});
+	},
+
+	/**
+	 * Gets the facet for the provided field
+	 *
+	 * @param  string    field
+	 *
+	 * @return mixed    //null | Facet
+	 */
+	getFacet: function(field)
+	{
+		for (var i = 0; i < this.facets.length; i++)
+		{
+			if (this.facets[i].getField() === field)
+			{
+				return this.facets[i];
+			}
+		}
+	},
+
+	/**
+	 * Gets all facets
+	 *
+	 * @return array
+	 */
+	getFacets: function()
+	{
+		return this.facets;
 	},
 
 	/**
@@ -733,6 +1065,14 @@ SearchRequest.prototype = {
 			}
 		});
 
+		this.facets.forEach(function(facet)
+		{
+			if (facet.field === original)
+			{
+				facet.setField(substitution);
+			}
+		});
+
 		this.filterSet.substituteField(original, substitution);
 	},
 
@@ -767,7 +1107,7 @@ filterPassThroughMethods.forEach(function(method)
 });
 
 window.SearchRequest = SearchRequest;
-},{"./filterSet":2,"./sort":4,"./validators/isIntegeric":6}],4:[function(require,module,exports){
+},{"./facet":1,"./filterSet":3,"./sort":5,"./validators/isIntegeric":7}],5:[function(require,module,exports){
 function Sort(field, direction)
 {
 	if (typeof field !== 'string')
@@ -809,7 +1149,7 @@ Sort.prototype = {
 }
 
 module.exports = Sort;
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /**
  * Determines if the provided value is one of the valid boolean strings
  *
@@ -821,7 +1161,7 @@ module.exports = function(value)
 {
 	return ['and', 'or'].indexOf(value) !== -1;
 };
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /**
  * Determines if the provided value is integer-like
  *
@@ -833,7 +1173,7 @@ module.exports = function(value)
 {
 	return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
 };
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /**
  * Determines if the provided value is one of the valid operators
  *
@@ -847,4 +1187,4 @@ module.exports = function(value)
 
 	return operators.indexOf(value) !== -1;
 };
-},{}]},{},[3]);
+},{}]},{},[4]);
