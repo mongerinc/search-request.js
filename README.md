@@ -2,7 +2,7 @@
 
 This library provides a set of classes that help represent requests for complex data and provides a way to convert requests to and from a standard JSON format. If you have interfaces with tons of parameters (filters, groupings, page, rowsPerPage, etc.), or if you're just looking for a standard way to communicate complex requests to other apps without racking your brain over how to represent this data in JSON, you will like this library.
 
-- **Version:** 3.0.1
+- **Version:** 3.1.0
 
 [![Build Status](https://travis-ci.org/mongerinc/search-request.js.png?branch=master)](https://travis-ci.org/mongerinc/search-request.js)
 
@@ -18,6 +18,7 @@ Table of contents
   * [Sorting](#sorting)
   * [Pagination](#pagination)
   * [Filtering](#filtering)
+  * [Faceting](#faceting)
 
 ### Installation
 
@@ -147,3 +148,71 @@ When reading a complex set of conditionals back from the `SearchRequest`, there 
 2. A `Filter` object represents a field, value, and conditional operator along with a boolean (and/or).
 
 Since the nesting of conditionals is theoretically infinite, you may want to implement a recursive function to apply the request to the library of your choice (like a database query builder).
+
+#### Faceting
+
+Faceting (i.e. getting attribute values and their counts) a `SearchRequest` can be done like this:
+
+```javascript
+facet = request.facet('someField');
+```
+
+This will create a facet for `someField` and, unlike other methods, returns a `Facet` instance instead of the `SearchRequest`. You can also create multiple facets at once:
+
+```javascript
+request.addFacets(['someField', 'someOtherField']);
+```
+
+This will return the `SearchRequest`.
+
+And you can get facets either one at a time by field name (will only return the first match):
+
+```javascript
+request.getFacet('someField');
+```
+
+Or all at once:
+
+```javascript
+request.getFacets();
+```
+
+Sorting a facet's results can be done either by count or value (the default) and a direction.
+
+```javascript
+facet.isCountSorting(); //bool
+facet.isValueSorting(); //bool
+facet.getSortDirection(); //'asc' or 'desc'
+
+facet.sortByCount();
+facet.sortByValue();
+facet.setSortDirection('asc');
+```
+
+The minimum number of values a facet field must have in order to be returned in the result set is 1.
+
+```javascript
+facet.getMinimumCount(); //1
+
+facet.setMinimumCount(5);
+```
+
+Filters that exist for the facet's field are by default excluded from consideration when building the facet results.
+
+```javascript
+facet.shouldExcludeOwnFilters(); //true
+
+facet.excludeOwnFilters();
+facet.includeOwnFilters();
+```
+
+A facet can also be paginated just like the search request and with the same default values:
+
+```javascript
+facet.getPage();
+facet.getLimit();
+facet.getSkip();
+
+facet.setPage(5).setLimit(100);
+facet.nextPage();
+```

@@ -1,4 +1,5 @@
 var Sort = require('./sort'),
+    Facet = require('./facet'),
     FilterSet = require('./filterSet'),
     isIntegeric = require('./validators/isIntegeric');
 
@@ -13,6 +14,8 @@ function SearchRequest(json)
 		this.term = inputs.term;
 		this.sorts = [];
 		this.addSorts(inputs.sorts);
+		this.facets = [];
+		this.addFacets(inputs.facets);
 		this.addFilterSet(inputs.filterSet);
 	}
 	else
@@ -21,6 +24,7 @@ function SearchRequest(json)
 		this.limit = 10;
 		this.term = null;
 		this.sorts = [];
+		this.facets = [];
 		this.filterSet = new FilterSet;
 	}
 }
@@ -120,6 +124,92 @@ SearchRequest.prototype = {
 	getSorts: function()
 	{
 		return this.sorts;
+	},
+
+	/**
+	 * Add a facet
+	 *
+	 * @param  string    field
+	 *
+	 * @return Facet
+	 */
+	facet: function(field)
+	{
+		var facet = new Facet({field: field});
+
+		this.facets.push(facet);
+
+		return facet;
+	},
+
+	/**
+	 * Add a facet
+	 *
+	 * @param  string    field
+	 *
+	 * @return this
+	 */
+	facetMany: function(fields)
+	{
+		var self = this;
+
+		if (!Array.isArray(fields))
+			throw new Error("Adding many facets must be done with an array.");
+
+		fields.forEach(function(field)
+		{
+			self.facet(field);
+		});
+
+		return this;
+	},
+
+	/**
+	 * Adds a group of facets
+	 *
+	 * @param  array    facets
+	 *
+	 * @return this
+	 */
+	addFacets: function(facets)
+	{
+		var self = this;
+
+		if (!Array.isArray(facets))
+			throw new Error("Adding many facets must be done with an array.");
+
+		facets.forEach(function(facet)
+		{
+			self.facets.push(new Facet(facet));
+		});
+	},
+
+	/**
+	 * Gets the facet for the provided field
+	 *
+	 * @param  string    field
+	 *
+	 * @return mixed    //null | Facet
+	 */
+	getFacet: function(field)
+	{
+		for (var i = 0; i < this.facets.length; i++)
+		{
+			if (this.facets[i].getField() === field)
+			{
+				return this.facets[i];
+			}
+		}
+	},
+
+	/**
+	 * Gets all facets
+	 *
+	 * @return array
+	 */
+	getFacets: function()
+	{
+		return this.facets;
 	},
 
 	/**
@@ -262,6 +352,14 @@ SearchRequest.prototype = {
 			if (sort.field === original)
 			{
 				sort.field = substitution;
+			}
+		});
+
+		this.facets.forEach(function(facet)
+		{
+			if (facet.field === original)
+			{
+				facet.setField(substitution);
 			}
 		});
 

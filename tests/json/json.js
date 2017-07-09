@@ -27,7 +27,8 @@ describe('json', function()
 		       .where('fun', 'more').orWhere(function(filterSet)
 		       {
 		           filterSet.where('hats', '>', 'large').where('butts', 'small');
-		       });
+		       })
+		       .facet('something').setPage(2).setLimit(100).sortByCount().setSortDirection('desc').setMinimumCount(5).includeOwnFilters();
 
 		return request;
 	}
@@ -47,6 +48,17 @@ describe('json', function()
 				{field: 'something', direction: 'asc'},
 				{field: 'otherThing', direction: 'desc'},
 			],
+			facets: [
+				{
+					field: 'something',
+					sortType: 'count',
+					sortDirection: 'desc',
+					page: 2,
+					limit: 100,
+					minimumCount: 5,
+					excludesOwnFilters: false,
+				}
+			],
 			filterSet: {
 				boolean: 'and',
 				filters: [
@@ -59,7 +71,7 @@ describe('json', function()
 						]
 					}
 				]
-			}
+			},
 		});
 	}
 
