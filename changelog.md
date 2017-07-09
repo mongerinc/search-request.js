@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.1.1
+- Bugfix: docs cleanup
+
 ### 3.1.0
 - Added faceting
 
