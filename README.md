@@ -19,6 +19,7 @@ Table of contents
   * [Pagination](#pagination)
   * [Filtering](#filtering)
   * [Faceting](#faceting)
+  * [Field Substitution](#field-subtitution)
 
 ### Installation
 
@@ -216,3 +217,36 @@ facet.getSkip();
 facet.setPage(5).setLimit(100);
 facet.nextPage();
 ```
+
+#### Field Substitution
+
+When making search requests, you often want to keep the specifics of a data storage schema hidden from the rest of your code base. For example, you may have a denormalized SQL field called `category_name` on your `products` table that on the way out gets formatted as:
+
+```javascript
+{
+  ...
+  'category': {
+    'id': product.category_id,
+    'name': product.category_name,
+  },
+  ...
+}
+```
+
+So the rest of your system sees `category.name` as the field, but your SQL repository only understands `category_name`. This is where field substitution comes in handy:
+
+```javascript
+//abstract layer code
+request.where('category.name', 'Foo');
+
+//then later in the repository
+request.substituteField('category.name', 'category_name');
+```
+
+You can also substitute many fields at once by passing in an array of `original`: `substitution` values:
+
+```javascript
+request.substituteFields(
+  {'category.name': 'category_name'},
+  {'category.id': 'category_id'},
+);
