@@ -187,6 +187,24 @@ describe('filter', function()
 		});
 	});
 
+	it("should handle all 'like' filters", function()
+	{
+		request.whereLike('first', 'foo')
+		       .whereNotLike('second', '%moo')
+		       .orWhereLike('third', 'goo%')
+		       .orWhereNotLike('fourth', '%spookyboo%');
+
+		expect(request.getFilterSet()).toEqual({
+			boolean: 'and',
+			filters: [
+				{field: 'first', operator: 'like', value: 'foo', boolean: 'and'},
+				{field: 'second', operator: 'not like', value: '%moo', boolean: 'and'},
+				{field: 'third', operator: 'like', value: 'goo%', boolean: 'or'},
+				{field: 'fourth', operator: 'not like', value: '%spookyboo%', boolean: 'or'},
+			]
+		});
+	});
+
 	it("should pluck nothing if no filters exist", function()
 	{
 		request.where('someField', false);
