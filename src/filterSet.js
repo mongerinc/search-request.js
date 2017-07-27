@@ -374,6 +374,63 @@ FilterSet.prototype = {
 	},
 
 	/**
+	 * Add a regex filter
+	 *
+	 * @param  string    field
+	 * @param  string    value
+	 * @param  string    boolean
+	 * @param  bool      not
+	 *
+	 * @return this
+	 */
+	whereRegex: function(field, value, boolean, not)
+	{
+		operator = not ? 'not regex' : 'regex';
+
+		return this.where(field, operator, value, boolean || 'and');
+	},
+
+	/**
+	 * Add an or regex filter
+	 *
+	 * @param  string    field
+	 * @param  string    value
+	 *
+	 * @return this
+	 */
+	orWhereRegex: function(field, value)
+	{
+		return this.whereRegex(field, value, 'or');
+	},
+
+	/**
+	 * Add a not regex filter
+	 *
+	 * @param  string    field
+	 * @param  string    value
+	 * @param  string    boolean
+	 *
+	 * @return this
+	 */
+	whereNotRegex: function(field, value, boolean)
+	{
+		return this.whereRegex(field, value, boolean || 'and', true);
+	},
+
+	/**
+	 * Add an or not regex filter
+	 *
+	 * @param  string    field
+	 * @param  string    value
+	 *
+	 * @return this
+	 */
+	orWhereNotRegex: function(field, value)
+	{
+		return this.whereNotRegex(field, value, 'or');
+	},
+
+	/**
 	 * @return string
 	 */
 	getBoolean: function()

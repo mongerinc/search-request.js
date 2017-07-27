@@ -205,6 +205,24 @@ describe('filter', function()
 		});
 	});
 
+	it("should handle all 'regex' filters", function()
+	{
+		request.whereRegex('first', 'foo')
+		       .whereNotRegex('second', '.*')
+		       .orWhereRegex('third', 'foo.{45}?')
+		       .orWhereNotRegex('fourth', 'whatever');
+
+		expect(request.getFilterSet()).toEqual({
+			boolean: 'and',
+			filters: [
+				{field: 'first', operator: 'regex', value: 'foo', boolean: 'and'},
+				{field: 'second', operator: 'not regex', value: '.*', boolean: 'and'},
+				{field: 'third', operator: 'regex', value: 'foo.{45}?', boolean: 'or'},
+				{field: 'fourth', operator: 'not regex', value: 'whatever', boolean: 'or'},
+			]
+		});
+	});
+
 	it("should pluck nothing if no filters exist", function()
 	{
 		request.where('someField', false);
