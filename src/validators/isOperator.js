@@ -7,7 +7,7 @@
  */
 module.exports = function(value)
 {
-	var operators = ['=', '>', '>=', '<', '<=', '!=', 'in', 'not in', 'like', 'not like', 'exists', 'not exists', 'between', 'not between'];
+	var operators = ['=', '>', '>=', '<', '<=', '!=', 'in', 'not in', 'like', 'not like', 'regex', 'not regex', 'exists', 'not exists', 'between', 'not between'];
 
 	return operators.indexOf(value) !== -1;
 };

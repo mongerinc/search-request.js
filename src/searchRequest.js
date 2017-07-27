@@ -383,6 +383,8 @@ var filterPassThroughMethods = [
 	'whereBetween', 'orWhereBetween', 'whereNotBetween', 'orWhereNotBetween',
 	'whereExists', 'orWhereExists', 'whereNotExists', 'orWhereNotExists',
 	'whereIn', 'orWhereIn', 'whereNotIn', 'orWhereNotIn',
+	'whereLike', 'orWhereLike', 'whereNotLike', 'orWhereNotLike',
+	'whereRegex', 'orWhereRegex', 'whereNotRegex', 'orWhereNotRegex',
 	'getFilter', 'getFilterValue'
 ];
 

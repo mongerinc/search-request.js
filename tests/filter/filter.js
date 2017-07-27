@@ -187,6 +187,42 @@ describe('filter', function()
 		});
 	});
 
+	it("should handle all 'like' filters", function()
+	{
+		request.whereLike('first', 'foo')
+		       .whereNotLike('second', '%moo')
+		       .orWhereLike('third', 'goo%')
+		       .orWhereNotLike('fourth', '%spookyboo%');
+
+		expect(request.getFilterSet()).toEqual({
+			boolean: 'and',
+			filters: [
+				{field: 'first', operator: 'like', value: 'foo', boolean: 'and'},
+				{field: 'second', operator: 'not like', value: '%moo', boolean: 'and'},
+				{field: 'third', operator: 'like', value: 'goo%', boolean: 'or'},
+				{field: 'fourth', operator: 'not like', value: '%spookyboo%', boolean: 'or'},
+			]
+		});
+	});
+
+	it("should handle all 'regex' filters", function()
+	{
+		request.whereRegex('first', 'foo')
+		       .whereNotRegex('second', '.*')
+		       .orWhereRegex('third', 'foo.{45}?')
+		       .orWhereNotRegex('fourth', 'whatever');
+
+		expect(request.getFilterSet()).toEqual({
+			boolean: 'and',
+			filters: [
+				{field: 'first', operator: 'regex', value: 'foo', boolean: 'and'},
+				{field: 'second', operator: 'not regex', value: '.*', boolean: 'and'},
+				{field: 'third', operator: 'regex', value: 'foo.{45}?', boolean: 'or'},
+				{field: 'fourth', operator: 'not regex', value: 'whatever', boolean: 'or'},
+			]
+		});
+	});
+
 	it("should pluck nothing if no filters exist", function()
 	{
 		request.where('someField', false);
