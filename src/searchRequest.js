@@ -14,6 +14,8 @@ function SearchRequest(json)
 		this.term = inputs.term;
 		this.sorts = [];
 		this.addSorts(inputs.sorts);
+		this.groups = [];
+		this.groupBy(inputs.groups);
 		this.facets = [];
 		this.addFacets(inputs.facets);
 		this.addFilterSet(inputs.filterSet);
@@ -24,6 +26,7 @@ function SearchRequest(json)
 		this.limit = 10;
 		this.term = null;
 		this.sorts = [];
+		this.groups = [];
 		this.facets = [];
 		this.filterSet = new FilterSet;
 	}
@@ -124,6 +127,39 @@ SearchRequest.prototype = {
 	getSorts: function()
 	{
 		return this.sorts;
+	},
+
+	/**
+	 * Adds grouping for the given field(s)
+	 *
+	 * @param  mixed  field
+	 */
+	groupBy: function(field)
+	{
+		if (!Array.isArray(field))
+			field = [field];
+
+		for (var i = 0; i < field.length; i++)
+		{
+			if (typeof field[i] !== 'string')
+			{
+				throw new Error("It's only possible to add a string or an array of strings of groups.");
+			}
+
+			this.groups.push(field[i]);
+		}
+
+		return this;
+	},
+
+	/**
+	 * Gets all groups
+	 *
+	 * @return array
+	 */
+	getGroups: function()
+	{
+		return this.groups;
 	},
 
 	/**
@@ -362,6 +398,14 @@ SearchRequest.prototype = {
 				facet.setField(substitution);
 			}
 		});
+
+		for (var i = this.groups.length - 1; i >= 0; i--)
+		{
+			if (this.groups[i] === original)
+			{
+				this.groups[i] = substitution;
+			}
+		}
 
 		this.filterSet.substituteField(original, substitution);
 	},
