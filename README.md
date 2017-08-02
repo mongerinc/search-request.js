@@ -27,7 +27,7 @@ Table of contents
 Install SearchRequest via bower by adding the following to the `require` block in your `bower.json` file:
 
 ```
-"search-request": "3.*"
+"search-request": "4.*"
 ```
 
 ### Usage
