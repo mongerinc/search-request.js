@@ -83,15 +83,15 @@ databaseQuery.orderBy(sort.getField(), sort.getDirection());
 Grouping a `SearchRequest` can be done using the `groupBy()` method. The `groupBy()` method takes either a string or an array of strings as an input. The method can also be chained.
 
 ```javascript
-$request.groupBy('field').groupBy('anotherField');
+request.groupBy('field').groupBy('anotherField');
 
-$request.groupBy(['field', 'anotherField']);
+request.groupBy(['field', 'anotherField']);
 ```
 
-Retrieving the set of groups is done by the `getGroups()` method;
+Retrieving the set of groups is done by the `getGroups()` method.
 
 ```javascript
-$request.getGroups();
+request.getGroups();
 ```
 
 #### Pagination
