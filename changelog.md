@@ -1,5 +1,8 @@
 ## Changelog
 
+### 4.0.0
+- Added grouping
+
 ### 3.2.0
 - Added regex filter operator
 - Updated readme to include word operator companion methods.

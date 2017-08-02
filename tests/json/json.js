@@ -24,6 +24,7 @@ describe('json', function()
 		request.setPage(5).setLimit(50)
 		       .setTerm('search this')
 		       .addSort('something', 'asc').addSort('otherThing', 'desc')
+		       .groupBy('something').groupBy('somethingElse')
 		       .where('fun', 'more').orWhere(function(filterSet)
 		       {
 		           filterSet.where('hats', '>', 'large').where('butts', 'small');
@@ -48,6 +49,7 @@ describe('json', function()
 				{field: 'something', direction: 'asc'},
 				{field: 'otherThing', direction: 'desc'},
 			],
+			groups: ['something', 'somethingElse'],
 			facets: [
 				{
 					field: 'something',

@@ -31,6 +31,26 @@ describe('field substitution', function()
 		]);
 	});
 
+	it("should handle group substitutions", function()
+	{
+		request.groupBy('first').groupBy('second').groupBy('third');
+
+		request.substituteFields({
+			'first': 'subFirst',
+			'third': 'subThird',
+		});
+
+		expect(request.getGroups()).toEqual([
+			'subFirst', 'second', 'subThird'
+		]);
+
+		request.substituteField('second', 'subSecond');
+
+		expect(request.getGroups()).toEqual([
+			'subFirst', 'subSecond', 'subThird'
+		]);
+	});
+
 	it("should handle facet substitutions", function()
 	{
 		request.facetMany(['first', 'second']);
