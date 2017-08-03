@@ -72,7 +72,7 @@ request->addSelect('field1')->addSelect('field2');
 Retrieving the set of selects is done by the `getSelects()` method.
 
 ```javascript
-$request->getSelects();
+request->getSelects();
 ```
 
 #### Sorting
