@@ -836,6 +836,7 @@ function SearchRequest(json)
 		this.page = inputs.page;
 		this.limit = inputs.limit;
 		this.term = inputs.term;
+		this.selects = inputs.selects;
 		this.sorts = [];
 		this.addSorts(inputs.sorts);
 		this.groups = [];
@@ -849,6 +850,7 @@ function SearchRequest(json)
 		this.page = 1;
 		this.limit = 10;
 		this.term = null;
+		this.selects = [];
 		this.sorts = [];
 		this.groups = [];
 		this.facets = [];
@@ -883,6 +885,67 @@ SearchRequest.prototype = {
 	getTerm: function()
 	{
 		return this.term;
+	},
+
+	/**
+	 * Set the selects
+	 *
+	 * @param  mixed    field
+	 *
+	 * @return this
+	 */
+	select: function(field)
+	{
+		if (!Array.isArray(field))
+			field = [field];
+
+		//clear the selects
+		this.selects = [];
+
+		for (var i = 0; i < field.length; i++)
+		{
+			this.addSelect(field[i]);
+		}
+
+		return this;
+	},
+
+	/**
+	 * Add a select
+	 *
+	 * @param  mixed    field
+	 *
+	 * @return this
+	 */
+	addSelect: function(field)
+	{
+		if (typeof field !== 'string' && !Array.isArray(field))
+			throw new Error("A select field must be a string or an array of strings.");
+
+		if (!Array.isArray(field))
+			field = [field];
+
+		for (var i = 0; i < field.length; i++)
+		{
+			if (typeof field[i] !== 'string')
+			{
+				throw new Error("A select field must be a string or an array of strings.");
+			}
+
+			this.selects.push(field[i]);
+		}
+
+		return this;
+	},
+
+	/**
+	 * Get the selects
+	 *
+	 * @return array
+	 */
+	getSelects: function()
+	{
+		return this.selects;
 	},
 
 	/**
@@ -1223,13 +1286,21 @@ SearchRequest.prototype = {
 			}
 		});
 
-		for (var i = this.groups.length - 1; i >= 0; i--)
+		this.selects.forEach(function(field, index, array)
 		{
-			if (this.groups[i] === original)
+			if (field === original)
 			{
-				this.groups[i] = substitution;
+				array[index] = substitution;
 			}
-		}
+		});
+
+		this.groups.forEach(function(field, index, array)
+		{
+			if (field === original)
+			{
+				array[index] = substitution;
+			}
+		});
 
 		this.filterSet.substituteField(original, substitution);
 	},

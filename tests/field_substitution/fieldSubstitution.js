@@ -7,6 +7,26 @@ describe('field substitution', function()
 		request = new SearchRequest;
 	});
 
+	it("should handle select substitutions", function()
+	{
+		request.select(['first', 'second', 'third']);
+
+		request.substituteFields({
+			'first': 'subFirst',
+			'third': 'subThird',
+		});
+
+		expect(request.getSelects()).toEqual([
+			'subFirst', 'second', 'subThird'
+		]);
+
+		request.substituteField('second', 'subSecond');
+
+		expect(request.getSelects()).toEqual([
+			'subFirst', 'subSecond', 'subThird'
+		]);
+	});
+
 	it("should handle sort substitutions", function()
 	{
 		request.addSort('first', 'asc').addSort('second', 'desc').addSort('third', 'asc');

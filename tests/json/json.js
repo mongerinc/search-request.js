@@ -23,6 +23,7 @@ describe('json', function()
 
 		request.setPage(5).setLimit(50)
 		       .setTerm('search this')
+		       .select(['field1', 'field2'])
 		       .addSort('something', 'asc').addSort('otherThing', 'desc')
 		       .groupBy('something').groupBy('somethingElse')
 		       .where('fun', 'more').orWhere(function(filterSet)
@@ -45,6 +46,7 @@ describe('json', function()
 			page: 5,
 			limit: 50,
 			term: 'search this',
+			selects: ['field1', 'field2'],
 			sorts: [
 				{field: 'something', direction: 'asc'},
 				{field: 'otherThing', direction: 'desc'},
