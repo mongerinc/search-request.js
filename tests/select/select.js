@@ -1,4 +1,4 @@
-describe('group', function()
+describe('select', function()
 {
 	var request;
 
