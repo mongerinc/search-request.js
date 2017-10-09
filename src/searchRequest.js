@@ -518,7 +518,10 @@ filterPassThroughMethods.forEach(function(method)
 {
 	SearchRequest.prototype[method] = function()
 	{
-		this.filterSet[method].apply(this.filterSet, arguments);
+		var response = this.filterSet[method].apply(this.filterSet, arguments);
+
+		if (method.indexOf('get') !== -1)
+			return response;
 
 		return this;
 	}

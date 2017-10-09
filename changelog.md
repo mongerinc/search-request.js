@@ -2,6 +2,7 @@
 
 ### 5.2.0
 - Handle deep-cloning of the search request
+- Avoid returning the search request from getFilter and getFilterValue methods
 
 ### 5.1.0
 - Removing filters by name
