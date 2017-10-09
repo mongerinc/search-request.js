@@ -66,7 +66,7 @@ request.select(['field1', 'field2']);
 If you want to add to existing selects, you can call the `addSelect()` method instead. You can chain this method:
 
 ```javascript
-request.addSelect('field1')->addSelect('field2');
+request.addSelect('field1').addSelect('field2');
 ```
 
 Retrieving the set of selects is done by the `getSelects()` method.
