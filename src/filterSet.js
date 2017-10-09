@@ -490,6 +490,31 @@ FilterSet.prototype = {
 	},
 
 	/**
+	 * Removes all instances of the filter with the provided field name(s)
+	 *
+	 * @param  mixed    key
+	 *
+	 * @return $this
+	 */
+	removeFilters: function(key)
+	{
+		var newFilters = []
+		    keys = [].concat(key);
+
+		this.filters.forEach(function(filter)
+		{
+			if (!(filter instanceof Filter) || (keys.indexOf(filter.getField())) === -1)
+			{
+				newFilters.push(filter);
+			}
+		});
+
+		this.filters = newFilters;
+
+		return this;
+	},
+
+	/**
 	 * Substitutes all field names in the filter set that match the provided substitution
 	 *
 	 * @param  string    original
