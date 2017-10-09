@@ -500,7 +500,8 @@ var filterPassThroughMethods = [
 	'whereIn', 'orWhereIn', 'whereNotIn', 'orWhereNotIn',
 	'whereLike', 'orWhereLike', 'whereNotLike', 'orWhereNotLike',
 	'whereRegex', 'orWhereRegex', 'whereNotRegex', 'orWhereNotRegex',
-	'getFilter', 'getFilterValue'
+	'getFilter', 'getFilterValue',
+	'removeFilters'
 ];
 
 filterPassThroughMethods.forEach(function(method)

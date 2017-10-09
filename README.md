@@ -203,6 +203,14 @@ When reading a complex set of conditionals back from the `SearchRequest`, there 
 
 Since the nesting of conditionals is theoretically infinite, you may want to implement a recursive function to apply the request to the library of your choice (like a database query builder).
 
+It's also possible to remove filters by name:
+
+```javascript
+request.where('foo', 1).where('moo', 2).where('goo', 3);
+
+request.removeFilters('foo').removeFilters(['moo', 'goo']);
+```
+
 #### Faceting
 
 Faceting (i.e. getting attribute values and their counts) a `SearchRequest` can be done like this:

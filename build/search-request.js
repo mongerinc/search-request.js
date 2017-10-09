@@ -798,6 +798,31 @@ FilterSet.prototype = {
 	},
 
 	/**
+	 * Removes all instances of the filter with the provided field name(s)
+	 *
+	 * @param  mixed    key
+	 *
+	 * @return $this
+	 */
+	removeFilters: function(key)
+	{
+		var newFilters = []
+		    keys = [].concat(key);
+
+		this.filters.forEach(function(filter)
+		{
+			if (!(filter instanceof Filter) || (keys.indexOf(filter.getField())) === -1)
+			{
+				newFilters.push(filter);
+			}
+		});
+
+		this.filters = newFilters;
+
+		return this;
+	},
+
+	/**
 	 * Substitutes all field names in the filter set that match the provided substitution
 	 *
 	 * @param  string    original
@@ -1324,7 +1349,8 @@ var filterPassThroughMethods = [
 	'whereIn', 'orWhereIn', 'whereNotIn', 'orWhereNotIn',
 	'whereLike', 'orWhereLike', 'whereNotLike', 'orWhereNotLike',
 	'whereRegex', 'orWhereRegex', 'whereNotRegex', 'orWhereNotRegex',
-	'getFilter', 'getFilterValue'
+	'getFilter', 'getFilterValue',
+	'removeFilters'
 ];
 
 filterPassThroughMethods.forEach(function(method)

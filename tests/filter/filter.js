@@ -259,4 +259,31 @@ describe('filter', function()
 		expect(request.getFilterSet()).toEqual(filterSet);
 	});
 
+	it("should remove filters", function()
+	{
+		request.where('first', true)
+		       .where('second', '>', 50)
+		       .where('second', '<', 100)
+		       .where('third', false)
+		       .where('fourth', true);
+
+		request.removeFilters('second');
+
+		expect(request.getFilterSet()).toEqual({
+			boolean: 'and',
+			filters: [
+				{field: 'first', operator: '=', value: true, boolean: 'and'},
+				{field: 'third', operator: '=', value: false, boolean: 'and'},
+				{field: 'fourth', operator: '=', value: true, boolean: 'and'},
+			]
+		});
+
+		request.removeFilters(['third', 'fourth']);
+
+		expect(request.getFilterSet()).toEqual({
+			boolean: 'and',
+			filters: [{field: 'first', operator: '=', value: true, boolean: 'and'}]
+		});
+	});
+
 });
