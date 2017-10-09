@@ -489,7 +489,17 @@ SearchRequest.prototype = {
 	toJson: function()
 	{
 		return JSON.stringify(this);
-	}
+	},
+
+	/**
+	 * Deep-clones the search request
+	 *
+	 * @return SearchRequest
+	 */
+	clone: function()
+	{
+		return new SearchRequest(this.toJson());
+	},
 
 };
 
