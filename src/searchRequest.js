@@ -489,7 +489,17 @@ SearchRequest.prototype = {
 	toJson: function()
 	{
 		return JSON.stringify(this);
-	}
+	},
+
+	/**
+	 * Deep-clones the search request
+	 *
+	 * @return SearchRequest
+	 */
+	clone: function()
+	{
+		return new SearchRequest(this.toJson());
+	},
 
 };
 
@@ -508,7 +518,10 @@ filterPassThroughMethods.forEach(function(method)
 {
 	SearchRequest.prototype[method] = function()
 	{
-		this.filterSet[method].apply(this.filterSet, arguments);
+		var response = this.filterSet[method].apply(this.filterSet, arguments);
+
+		if (method.indexOf('get') !== -1)
+			return response;
 
 		return this;
 	}

@@ -227,16 +227,16 @@ describe('filter', function()
 	{
 		request.where('someField', false);
 
-		expect(request.getFilterSet().getFilter('someOtherField')).toEqual(undefined);
-		expect(request.getFilterSet().getFilterValue('someOtherField')).toEqual(undefined);
+		expect(request.getFilter('someOtherField')).toEqual(undefined);
+		expect(request.getFilterValue('someOtherField')).toEqual(undefined);
 	});
 
 	it("should pluck the first filter instance of a field", function()
 	{
 		request.where('someField', false).where('someField', '>=', 40.24);
 
-		expect(request.getFilterSet().getFilter('someField')).toEqual({field: 'someField', operator: '=', value: false, boolean: 'and'});
-		expect(request.getFilterSet().getFilterValue('someField')).toEqual(false);
+		expect(request.getFilter('someField')).toEqual({field: 'someField', operator: '=', value: false, boolean: 'and'});
+		expect(request.getFilterValue('someField')).toEqual(false);
 	});
 
 	it("should add a raw filter set", function()
