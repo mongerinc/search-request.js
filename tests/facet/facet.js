@@ -110,4 +110,52 @@ describe('facet', function()
 		});
 	});
 
+	it("should reset page by default", function()
+	{
+		var facet = request.facet('someField');
+
+		facet.setPage(5).sortByCount();
+		expect(facet.getPage()).toEqual(1);
+
+		facet.setPage(5).sortByValue();
+		expect(facet.getPage()).toEqual(1);
+
+		facet.setPage(5).setMinimumCount(5);
+		expect(facet.getPage()).toEqual(1);
+
+		facet.setPage(5).excludeOwnFilters();
+		expect(facet.getPage()).toEqual(1);
+
+		facet.setPage(5).includeOwnFilters();
+		expect(facet.getPage()).toEqual(1);
+	});
+
+	it("should not reset page when disabled", function()
+	{
+		var facet = request.facet('someField').disableAutomaticPageReset();
+
+		facet.setPage(5).sortByCount();
+		expect(facet.getPage()).toEqual(5);
+
+		facet.setPage(5).sortByValue();
+		expect(facet.getPage()).toEqual(5);
+
+		facet.setPage(5).setMinimumCount(5);
+		expect(facet.getPage()).toEqual(5);
+
+		facet.setPage(5).excludeOwnFilters();
+		expect(facet.getPage()).toEqual(5);
+
+		facet.setPage(5).includeOwnFilters();
+		expect(facet.getPage()).toEqual(5);
+	});
+
+	it("should reset page when reenabled", function()
+	{
+		var facet = request.facet('someField').disableAutomaticPageReset().enableAutomaticPageReset();
+
+		facet.setPage(5).sortByCount();
+		expect(facet.getPage()).toEqual(1);
+	});
+
 });
