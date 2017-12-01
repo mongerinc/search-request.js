@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.3.0
+- Automatically resetting the page to 1 whenever a filter, term, sort, or grouping changes. Same for facets with the other filter/sort changes.
+
 ### 5.2.0
 - Handle deep-cloning of the search request
 - Avoid returning the search request from getFilter and getFilterValue methods

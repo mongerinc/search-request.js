@@ -21,8 +21,7 @@ describe('json', function()
 	{
 		var request = new SearchRequest;
 
-		request.setPage(5).setLimit(50)
-		       .setTerm('search this')
+		request.setTerm('search this')
 		       .select(['field1', 'field2'])
 		       .addSort('something', 'asc').addSort('otherThing', 'desc')
 		       .groupBy('something').groupBy('somethingElse')
@@ -30,7 +29,8 @@ describe('json', function()
 		       {
 		           filterSet.where('hats', '>', 'large').where('butts', 'small');
 		       })
-		       .facet('something').setPage(2).setLimit(100).sortByCount().setSortDirection('desc').setMinimumCount(5).includeOwnFilters();
+		       .setPage(5).setLimit(50)
+		       .facet('something').sortByCount().setSortDirection('desc').setMinimumCount(5).includeOwnFilters().setPage(2).setLimit(100);
 
 		return request;
 	}
@@ -54,11 +54,11 @@ describe('json', function()
 			groups: ['something', 'somethingElse'],
 			facets: [
 				{
+					page: 2,
+					limit: 100,
 					field: 'something',
 					sortType: 'count',
 					sortDirection: 'desc',
-					page: 2,
-					limit: 100,
 					minimumCount: 5,
 					excludesOwnFilters: false,
 				}

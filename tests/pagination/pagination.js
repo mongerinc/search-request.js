@@ -45,4 +45,44 @@ describe('pagination', function()
 		expect(request.getLimit()).toEqual(100);
 		expect(request.getSkip()).toEqual(100);
 	});
+
+	it("should reset page by default", function()
+	{
+		request.setPage(5).where('foo', true);
+		expect(request.getPage()).toEqual(1);
+
+		request.setPage(5).sortBy('foo', 'desc');
+		expect(request.getPage()).toEqual(1);
+
+		request.setPage(5).groupBy('foo');
+		expect(request.getPage()).toEqual(1);
+
+		request.setPage(5).setTerm('foo');
+		expect(request.getPage()).toEqual(1);
+	});
+
+	it("should not reset page when disabled", function()
+	{
+		request.disableAutomaticPageReset();
+
+		request.setPage(5).where('foo', true);
+		expect(request.getPage()).toEqual(5);
+
+		request.setPage(5).sortBy('foo', 'desc');
+		expect(request.getPage()).toEqual(5);
+
+		request.setPage(5).groupBy('foo');
+		expect(request.getPage()).toEqual(5);
+
+		request.setPage(5).setTerm('foo');
+		expect(request.getPage()).toEqual(5);
+	});
+
+	it("should reset page when reenabled", function()
+	{
+		request.disableAutomaticPageReset().enableAutomaticPageReset();
+
+		request.setPage(5).where('foo', true);
+		expect(request.getPage()).toEqual(1);
+	});
 });

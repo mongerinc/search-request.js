@@ -5,12 +5,19 @@ var Sort = require('./sort'),
 
 function SearchRequest(json)
 {
+	this.page = 1;
+	this.limit = 10;
+	this.term = null;
+	this.selects = [];
+	this.sorts = [];
+	this.groups = [];
+	this.facets = [];
+	this.filterSet = new FilterSet;
+
 	if (json)
 	{
 		var inputs = JSON.parse(json);
 
-		this.page = inputs.page;
-		this.limit = inputs.limit;
 		this.term = inputs.term;
 		this.selects = inputs.selects;
 		this.sorts = [];
@@ -20,21 +27,19 @@ function SearchRequest(json)
 		this.facets = [];
 		this.addFacets(inputs.facets);
 		this.addFilterSet(inputs.filterSet);
-	}
-	else
-	{
-		this.page = 1;
-		this.limit = 10;
-		this.term = null;
-		this.selects = [];
-		this.sorts = [];
-		this.groups = [];
-		this.facets = [];
-		this.filterSet = new FilterSet;
+		this.page = inputs.page;
+		this.limit = inputs.limit;
 	}
 }
 
 SearchRequest.prototype = {
+
+	/**
+	 * Determines if the page should reset when filter/group/sort changes
+	 *
+	 * @var bool
+	 */
+	pageShouldAutomaticallyReset: true,
 
 	/**
 	 * Sets the global search term
@@ -49,6 +54,9 @@ SearchRequest.prototype = {
 			throw new Error("A search term can only be a string or null.");
 
 		this.term = term;
+
+		if (this.pageShouldAutomaticallyReset)
+			this.setPage(1);
 
 		return this;
 	},
@@ -134,7 +142,9 @@ SearchRequest.prototype = {
 	 */
 	sortBy: function(field, direction)
 	{
-		this.sorts = [new Sort(field, direction)];
+		this.sorts = [];
+
+		this.addSort(field, direction);
 
 		return this;
 	},
@@ -150,6 +160,9 @@ SearchRequest.prototype = {
 	addSort: function(field, direction)
 	{
 		this.sorts.push(new Sort(field, direction));
+
+		if (this.pageShouldAutomaticallyReset)
+			this.setPage(1);
 
 		return this;
 	},
@@ -211,6 +224,9 @@ SearchRequest.prototype = {
 
 			this.groups.push(field[i]);
 		}
+
+		if (this.pageShouldAutomaticallyReset)
+			this.setPage(1);
 
 		return this;
 	},
@@ -402,6 +418,30 @@ SearchRequest.prototype = {
 	},
 
 	/**
+	 * Disables automatic page resetting
+	 *
+	 * @return this
+	 */
+	disableAutomaticPageReset: function()
+	{
+		this.pageShouldAutomaticallyReset = false;
+
+		return this;
+	},
+
+	/**
+	 * Enables automatic page resetting
+	 *
+	 * @return this
+	 */
+	enableAutomaticPageReset: function()
+	{
+		this.pageShouldAutomaticallyReset = true;
+
+		return this;
+	},
+
+	/**
 	 * Adds the filter set from the provided input array
 	 *
 	 * @param  object    filterSet
@@ -522,6 +562,9 @@ filterPassThroughMethods.forEach(function(method)
 
 		if (method.indexOf('get') !== -1)
 			return response;
+
+		if ((method.toLowerCase().indexOf('where') !== -1) && this.pageShouldAutomaticallyReset)
+			this.setPage(1);
 
 		return this;
 	}

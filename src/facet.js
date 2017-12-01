@@ -5,16 +5,26 @@ function Facet(values)
 	if (!values || typeof values !== 'object')
 		throw new Error("A Facet object must be instantiated with an object of input values.");
 
+	this.page = 1;
+	this.limit = 10;
+
 	this.setField(values.field);
 	this.setSortType(values.hasOwnProperty('sortType') ? values.sortType : 'value');
 	this.setSortDirection(values.hasOwnProperty('sortDirection') ? values.sortDirection : 'asc');
-	this.setPage(values.hasOwnProperty('page') ? values.page : 1);
-	this.setLimit(values.hasOwnProperty('limit') ? values.limit : 10);
 	this.setMinimumCount(values.hasOwnProperty('minimumCount') ? values.minimumCount : 1);
 	this.setExcludesOwnFilters(values.hasOwnProperty('excludesOwnFilters') ? values.excludesOwnFilters : true);
+	this.setPage(values.hasOwnProperty('page') ? values.page : this.page);
+	this.setLimit(values.hasOwnProperty('limit') ? values.limit : this.limit);
 }
 
 Facet.prototype = {
+
+	/**
+	 * Determines if the page should reset when filter/sort changes
+	 *
+	 * @var bool
+	 */
+	pageShouldAutomaticallyReset: true,
 
 	/**
 	 * @return string
@@ -135,6 +145,9 @@ Facet.prototype = {
 
 		this.sortType = type;
 
+		if (this.pageShouldAutomaticallyReset)
+			this.setPage(1);
+
 		return this;
 	},
 
@@ -149,6 +162,9 @@ Facet.prototype = {
 			throw new Error("The sort direction must be either 'asc' or 'desc'.");
 
 		this.sortDirection = direction;
+
+		if (this.pageShouldAutomaticallyReset)
+			this.setPage(1);
 
 		return this;
 	},
@@ -205,6 +221,9 @@ Facet.prototype = {
 
 		this.minimumCount = parseInt(minimumCount);
 
+		if (this.pageShouldAutomaticallyReset)
+			this.setPage(1);
+
 		return this;
 	},
 
@@ -232,6 +251,33 @@ Facet.prototype = {
 	setExcludesOwnFilters: function(value)
 	{
 		this.excludesOwnFilters = !!value;
+
+		if (this.pageShouldAutomaticallyReset)
+			this.setPage(1);
+
+		return this;
+	},
+
+	/**
+	 * Disables automatic page resetting
+	 *
+	 * @return this
+	 */
+	disableAutomaticPageReset: function()
+	{
+		this.pageShouldAutomaticallyReset = false;
+
+		return this;
+	},
+
+	/**
+	 * Enables automatic page resetting
+	 *
+	 * @return this
+	 */
+	enableAutomaticPageReset: function()
+	{
+		this.pageShouldAutomaticallyReset = true;
 
 		return this;
 	},
