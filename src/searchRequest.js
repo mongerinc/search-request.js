@@ -7,6 +7,7 @@ function SearchRequest(json)
 {
 	this.page = 1;
 	this.limit = 10;
+	this.unlimited = false;
 	this.term = null;
 	this.selects = [];
 	this.sorts = [];
@@ -29,6 +30,7 @@ function SearchRequest(json)
 		this.addFilterSet(inputs.filterSet);
 		this.page = inputs.page;
 		this.limit = inputs.limit;
+		this.unlimited = inputs.unlimited || false;
 	}
 }
 
@@ -378,6 +380,30 @@ SearchRequest.prototype = {
 	},
 
 	/**
+	 * Sets the unlimited flag
+	 *
+	 * @param  bool    unlimited
+	 *
+	 * @return this
+	 */
+	unlimited: function(unlimited)
+	{
+		$this.unlimited = $unlimited === false ? false : true;
+
+		return this;
+	},
+
+	/**
+	 * Alias for calling unlimited with true
+	 *
+	 * @return this
+	 */
+	all: function()
+	{
+		return $this.unlimited(true);
+	},
+
+	/**
 	 * Gets the current page
 	 *
 	 * @return int
@@ -385,6 +411,16 @@ SearchRequest.prototype = {
 	getPage: function()
 	{
 		return this.page;
+	},
+
+	/**
+	 * Gets the unlimited flag
+	 *
+	 * @return bool
+	 */
+	isUnlimited: function()
+	{
+		return this.unlimited;
 	},
 
 	/**
