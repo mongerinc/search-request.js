@@ -902,6 +902,7 @@ function SearchRequest(json)
 {
 	this.page = 1;
 	this.limit = 10;
+	this.unlimited = false;
 	this.term = null;
 	this.selects = [];
 	this.sorts = [];
@@ -922,8 +923,9 @@ function SearchRequest(json)
 		this.facets = [];
 		this.addFacets(inputs.facets);
 		this.addFilterSet(inputs.filterSet);
-		this.page = inputs.page;
-		this.limit = inputs.limit;
+		this.setPage(inputs.page);
+		this.setLimit(inputs.limit);
+		this.unlimited = inputs.unlimited || false;
 	}
 }
 
@@ -1237,6 +1239,7 @@ SearchRequest.prototype = {
 			throw new Error("A page can only be a positive integer.");
 
 		this.page = parseInt(page);
+		this.unlimited = false;
 
 		return this;
 	},
@@ -1268,8 +1271,33 @@ SearchRequest.prototype = {
 			throw new Error("A page row limit can only be a positive integer.");
 
 		this.limit = parseInt(limit);
+		this.unlimited = false;
 
 		return this;
+	},
+
+	/**
+	 * Sets the unlimited flag
+	 *
+	 * @param  bool    unlimited
+	 *
+	 * @return this
+	 */
+	setUnlimited: function(unlimited)
+	{
+		this.unlimited = unlimited === false ? false : true;
+
+		return this;
+	},
+
+	/**
+	 * Alias for calling unlimited with true
+	 *
+	 * @return this
+	 */
+	all: function()
+	{
+		return this.setUnlimited(true);
 	},
 
 	/**
@@ -1280,6 +1308,16 @@ SearchRequest.prototype = {
 	getPage: function()
 	{
 		return this.page;
+	},
+
+	/**
+	 * Gets the unlimited flag
+	 *
+	 * @return bool
+	 */
+	isUnlimited: function()
+	{
+		return this.unlimited;
 	},
 
 	/**
