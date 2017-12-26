@@ -12,6 +12,18 @@ describe('json', function()
 		expect(request).toEqual(buildExpectedRequest());
 	});
 
+	it("should build unlimited from json correctly", function()
+	{
+		var json = JSON.parse(buildExpectedJson()),
+			expectation = buildExpectedRequest();
+
+		json.unlimited = true;
+		expectation.unlimited = true;
+
+		var request = new SearchRequest(JSON.stringify(json));
+		expect(request).toEqual(expectation);
+	});
+
 	/**
 	 * Builds the expected search request
 	 *
