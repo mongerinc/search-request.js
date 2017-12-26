@@ -45,6 +45,7 @@ describe('json', function()
 		return JSON.stringify({
 			page: 5,
 			limit: 50,
+			unlimited: false,
 			term: 'search this',
 			selects: ['field1', 'field2'],
 			sorts: [

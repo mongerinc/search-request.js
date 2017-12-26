@@ -85,4 +85,27 @@ describe('pagination', function()
 		request.setPage(5).where('foo', true);
 		expect(request.getPage()).toEqual(1);
 	});
+
+	it("should respect unlimited values", function()
+	{
+		expect(request.isUnlimited()).toEqual(false);
+
+		request.setUnlimited();
+		expect(request.isUnlimited()).toEqual(true);
+
+		request.setUnlimited(false);
+		expect(request.isUnlimited()).toEqual(false);
+
+		request.all();
+		expect(request.isUnlimited()).toEqual(true);
+	});
+
+	it("falsify unlimited when setting pagination", function()
+	{
+		request.setUnlimited().setPage(1);
+		expect(request.isUnlimited()).toEqual(false);
+
+		request.setUnlimited().setLimit(1);
+		expect(request.isUnlimited()).toEqual(false);
+	});
 });
