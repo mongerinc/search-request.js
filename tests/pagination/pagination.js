@@ -100,7 +100,7 @@ describe('pagination', function()
 		expect(request.isUnlimited()).toEqual(true);
 	});
 
-	it("falsify unlimited when setting pagination", function()
+	it("should falsify unlimited when setting pagination", function()
 	{
 		request.setUnlimited().setPage(1);
 		expect(request.isUnlimited()).toEqual(false);
