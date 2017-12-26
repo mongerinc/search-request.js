@@ -28,9 +28,9 @@ function SearchRequest(json)
 		this.facets = [];
 		this.addFacets(inputs.facets);
 		this.addFilterSet(inputs.filterSet);
-		this.page = inputs.page;
-		this.limit = inputs.limit;
 		this.unlimited = inputs.unlimited || false;
+		this.setPage(inputs.page);
+		this.setLimit(inputs.limit);
 	}
 }
 
@@ -344,6 +344,7 @@ SearchRequest.prototype = {
 			throw new Error("A page can only be a positive integer.");
 
 		this.page = parseInt(page);
+		this.unlimited = false;
 
 		return this;
 	},
@@ -375,6 +376,7 @@ SearchRequest.prototype = {
 			throw new Error("A page row limit can only be a positive integer.");
 
 		this.limit = parseInt(limit);
+		this.unlimited = false;
 
 		return this;
 	},
@@ -388,7 +390,7 @@ SearchRequest.prototype = {
 	 */
 	unlimited: function(unlimited)
 	{
-		$this.unlimited = $unlimited === false ? false : true;
+		this.unlimited = $unlimited === false ? false : true;
 
 		return this;
 	},
@@ -400,7 +402,7 @@ SearchRequest.prototype = {
 	 */
 	all: function()
 	{
-		return $this.unlimited(true);
+		return this.unlimited(true);
 	},
 
 	/**
