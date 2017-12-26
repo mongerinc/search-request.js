@@ -139,9 +139,9 @@ Alternatively, you can call `getSkip()` to avoid doing the calculation above.
 If you want to ignore the pagination for a request, you can call the `unlimited()` or `all()` methods.
 
 ```javascript
-$request = $request.unlimited();
+request = request.unlimited();
 
-if (!$request.isUnlimited())
+if (!request.isUnlimited())
    databaseQuery.take(request.getLimit()).skip(request.getSkip());
 ```
 
