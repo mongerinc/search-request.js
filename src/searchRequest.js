@@ -28,9 +28,9 @@ function SearchRequest(json)
 		this.facets = [];
 		this.addFacets(inputs.facets);
 		this.addFilterSet(inputs.filterSet);
-		this.unlimited = inputs.unlimited || false;
 		this.setPage(inputs.page);
 		this.setLimit(inputs.limit);
+		this.unlimited = inputs.unlimited || false;
 	}
 }
 
@@ -388,9 +388,9 @@ SearchRequest.prototype = {
 	 *
 	 * @return this
 	 */
-	unlimited: function(unlimited)
+	setUnlimited: function(unlimited)
 	{
-		this.unlimited = $unlimited === false ? false : true;
+		this.unlimited = unlimited === false ? false : true;
 
 		return this;
 	},
@@ -402,7 +402,7 @@ SearchRequest.prototype = {
 	 */
 	all: function()
 	{
-		return this.unlimited(true);
+		return this.setUnlimited(true);
 	},
 
 	/**
